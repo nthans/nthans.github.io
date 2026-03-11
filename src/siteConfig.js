@@ -1,12 +1,12 @@
 export const siteConfig = {
-  name: "Jane Doe",
+  name: "Nathan Lammers",
   role: "XR Developer",
   tagline: "Ik bouw interactieve XR-ervaringen die zich natuurlijk en intuïtief aanvoelen.",
   aboutImage: "https://api.dicebear.com/7.x/notionists/png?seed=portfolio",
   cv: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
 
   socials: {
-    email: "jane.doe@example.com",
+    email: "nathanlammers01@gmail.com",
     github: "https://github.com/",
     linkedin: "https://linkedin.com/",
     itch: "https://itch.io/",

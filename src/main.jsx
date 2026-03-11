@@ -1,6 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import ProjectPage from "./pages/ProjectPage";
 import { HashRouter, Routes, Route } from "react-router-dom";
+
 
 import App from "./App";
 import Home from "./pages/Home";
@@ -17,6 +19,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           <Route index element={<Home />} />
           <Route path="about" element={<About />} />
           <Route path="contact" element={<Contact />} />
+          <Route path="projects/:projectId" element={<ProjectPage />} />
         </Route>
       </Routes>
     </HashRouter>
