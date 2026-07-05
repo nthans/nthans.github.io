@@ -100,11 +100,11 @@
       ]
     },
     {
-      "id": "vr-training-sim",
-      "title": "VR Training Simulator",
+      "id": "symphony-of-skin",
+      "title": "Symphony of skin",
       "tagline": "Een realistische VR-training voor industriële procedures.",
       "description": "Deze VR training simulator is gebouwd voor het oefenen van complexe industriële procedures in een volledig veilige virtuele omgeving. Het doel was om een training te creëren die net zo effectief is als hands-on training, maar zonder de risico's en kosten.\n\nDe focus lag op realistische hand-tracking voor natuurlijke interacties, stapsgewijze instructies die gebruikers begeleiden en gedetailleerde feedback op gebruikersacties waarbij immediate feedback het leerproces versterkt.\n\nHet project leerde mij hoe je effectieve VR training ervaringen ontwerpt met verschillende difficulty modes en performance tracking om daadwerkelijk kennisoverdracht te bevorderen.",
-      "thumbnail": "https://picsum.photos/seed/vrtrain/1200/600",
+      "thumbnail": "/symphony-of-skin-thumbnail.jpg",
       "youtube": "https://www.youtube.com/embed/dQw4w9WgXcQ",
       "screenshots": [
         "https://picsum.photos/seed/vrt1/1200/800",
@@ -123,13 +123,13 @@
         {
           "subtitle": "Step-by-Step Guide System",
           "description": "Een dynamisch instructiesysteem dat de gebruiker door complexe multi-step procedures leidt met real-time visual guidance. Elke step heeft validation criteria die checken of de actie correct is uitgevoerd. In guided mode krijg je hints als je te lang stilstaat, terwijl advanced mode minimale assists heeft voor realistischere training.",
-          "image": "https://placehold.co/600x400?text=Guide+System",
+          "image": "",
           "code": "public class StepGuide : MonoBehaviour\n{\n    public List<TrainingStep> steps;\n    private int currentStep = 0;\n\n    void CheckStepCompletion()\n    {\n        if (steps[currentStep].IsCompleted())\n        {\n            currentStep++;\n            ShowNextInstruction();\n        }\n    }\n}"
         },
         {
           "subtitle": "Hand Tracking Validation",
           "description": "Controleert of handposities en hand poses correct zijn voor specifieke acties door palm orientation en finger positions te valideren. Wanneer je grip incorrect is, verschijnt een ghost hand overlay die de correcte positie toont. Dit is veel effectiever dan tekstuele instructies omdat mensen de juiste pose kunnen imiteren.",
-          "image": "https://placehold.co/600x400?text=Hand+Tracking",
+          "image": "",
           "code": "bool ValidateHandPose(HandPose required)\n{\n    float similarity = Vector3.Dot(\n        currentPose.palmNormal,\n        required.palmNormal\n    );\n\n    return similarity > 0.95f;\n}"
         }
       ],
@@ -142,8 +142,9 @@
       "tagline": "Een interactieve AR-applicatie voor museum bezoekers.",
       "description": "De AR Museum Guide brengt museumtentoonstellingen tot leven door digitale content over fysieke objecten heen te projecteren en transformeert statische kunstwerken in interactieve verhalen. Een Romeins schilderij komt tot leven met animated characters, bij fossielen verschijnen 3D reconstructies.\n\nGebruikers kunnen hun telefoon op kunstwerken richten om extra informatie, 3D modellen en interactieve elementen te zien die historical context bieden op een engaging manier.\n\nDit project introduceerde mij in AR Foundation, image tracking en UI design voor augmented reality waarbij ik leerde werken met verschillende lighting conditions in musea.",
       "thumbnail": "/masks-eye.png",
-      "youtube": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+      "youtube": "",
       "screenshots": [
+        "/masks-eye-hallway.png",
         "https://picsum.photos/seed/arm1/1200/800",
         "https://picsum.photos/seed/arm2/1200/800"
       ],
@@ -157,15 +158,15 @@
       "timeline": "3 weken",
       "mechanics": [
         {
-          "subtitle": "Image Tracking System",
-          "description": "Herkent kunstwerken en plaatst AR content op de juiste posities door gebruik te maken van AR Foundation's image tracking. Wanneer een artwork gedetecteerd wordt, spawned het systeem de bijbehorende content - info panels, 3D modellen of video overlays. De content blijft stabiel geanchored zelfs als de camera beweegt.",
-          "image": "https://placehold.co/600x400?text=Image+Tracking",
+          "subtitle": "Generate text",
+          "description": "Een systeem dat dynamisch tekstballonnen of tekstvakken genereert wanneer dat nodig is. De tekst wordt letter voor letter van links naar rechts getypt, wat zorgt voor een rustig en uiterst bevredigend visueel effect.",
+          "image": "",
           "code": "void OnTrackedImagesChanged(ARTrackedImagesChangedEventArgs args)\n{\n    foreach (var trackedImage in args.added)\n    {\n        string artworkId = trackedImage.referenceImage.name;\n        SpawnARContent(artworkId, trackedImage.transform);\n    }\n}"
         },
         {
-          "subtitle": "Interactive 3D Models",
-          "description": "Gebruikers kunnen 3D modellen roteren en schalen met intuïtive touch gestures - single finger drag roteert, pinch zoom schaalt en two-finger drag verplaatst het model. Sommige modellen zijn animated en kunnen hun functie demonstreren. Custom shaders zorgen dat de modellen natuurlijk blenden met de real world door environment lighting.",
-          "image": "https://placehold.co/600x400?text=3D+Interaction",
+          "subtitle": "Player movement",
+          "description": "Een soepel en responsief bewegingssysteem voor de speler dat perfect aansluit bij de sfeer van een escape room. Door nauwkeurige besturing en vloeiende versnelling voelt het verkennen van de kamers intuïtief en meeslepend aan.",
+          "image": "",
           "code": "void HandleTouchInput()\n{\n    if (Input.touchCount == 2)\n    {\n        Touch t1 = Input.GetTouch(0);\n        Touch t2 = Input.GetTouch(1);\n\n        float pinchDist = Vector2.Distance(t1.position, t2.position);\n        float scale = pinchDist / initialPinchDist;\n\n        model.localScale = initialScale * scale;\n    }\n}"
         }
       ],
