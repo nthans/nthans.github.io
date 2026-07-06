@@ -139,8 +139,8 @@
     {
       "id": "masks-eye",
       "title": "Mask's eye",
-      "tagline": "Een interactieve AR-applicatie voor museum bezoekers.",
-      "description": "De AR Museum Guide brengt museumtentoonstellingen tot leven door digitale content over fysieke objecten heen te projecteren en transformeert statische kunstwerken in interactieve verhalen. Een Romeins schilderij komt tot leven met animated characters, bij fossielen verschijnen 3D reconstructies.\n\nGebruikers kunnen hun telefoon op kunstwerken richten om extra informatie, 3D modellen en interactieve elementen te zien die historical context bieden op een engaging manier.\n\nDit project introduceerde mij in AR Foundation, image tracking en UI design voor augmented reality waarbij ik leerde werken met verschillende lighting conditions in musea.",
+      "tagline": "Een mysterieus puzzeldetectivespel waarin je magische maskers gebruikt om mysteries te ontrafelen.",
+      "description": "Mask's eye is een mysterieus puzzelspel waarin je verschillende magische maskers opzet om de wereld vanuit unieke perspectieven te bekijken. Gebruik de speciale krachten van elk masker om verborgen aanwijzingen te ontdekken, puzzels op te lossen en het mysterie te ontrafelen.",
       "thumbnail": "/masks-eye.png",
       "youtube": "",
       "screenshots": [
@@ -161,17 +161,47 @@
           "subtitle": "Generate text",
           "description": "Een systeem dat dynamisch tekstballonnen of tekstvakken genereert wanneer dat nodig is. De tekst wordt letter voor letter van links naar rechts getypt, wat zorgt voor een rustig en uiterst bevredigend visueel effect.",
           "image": "",
-          "code": "void OnTrackedImagesChanged(ARTrackedImagesChangedEventArgs args)\n{\n    foreach (var trackedImage in args.added)\n    {\n        string artworkId = trackedImage.referenceImage.name;\n        SpawnARContent(artworkId, trackedImage.transform);\n    }\n}"
+          "code": "IEnumerator Letters()\n{\n    dialogText.text = \"\";\n\n    if (queue.Count != 0)\n    { \n        string sentence = queue.Dequeue();\n\n        foreach (char letter in sentence)\n        { \n            dialogText.text += letter;\n            yield return new WaitForSeconds(letterDelay);\n        }\n    }\n}"
         },
         {
           "subtitle": "Player movement",
           "description": "Een soepel en responsief bewegingssysteem voor de speler dat perfect aansluit bij de sfeer van een escape room. Door nauwkeurige besturing en vloeiende versnelling voelt het verkennen van de kamers intuïtief en meeslepend aan.",
           "image": "",
-          "code": "void HandleTouchInput()\n{\n    if (Input.touchCount == 2)\n    {\n        Touch t1 = Input.GetTouch(0);\n        Touch t2 = Input.GetTouch(1);\n\n        float pinchDist = Vector2.Distance(t1.position, t2.position);\n        float scale = pinchDist / initialPinchDist;\n\n        model.localScale = initialScale * scale;\n    }\n}"
-        }
+          "code": "private void Update()\n{\n    if (!MaskPickup.MinigamingIt)\n    {\n        Vector3 move = transform.right * Input.GetAxis(\"Horizontal\") + transform.forward * Input.GetAxis(\"Vertical\");\n        cc.Move(move * speed * Time.deltaTime);\n        if (cc.isGrounded && velocity.y < 0)\n        {\n            velocity.y = -2;\n        }\n        velocity.y += gravity * Time.deltaTime;\n        cc.Move(velocity * Time.deltaTime);\n    }\n\n    if ((Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D)) && !MaskPickup.MinigamingIt)\n    {\n        walking = true;\n    }\n    else\n    {\n        walking = false;\n    }\n\n    if (walking)\n    {\n        if (!walkAudio.isPlaying)\n        {\n            walkAudio.Play();\n            walkAudio.pitch = Random.Range(.75f, 1f);\n        }\n    }\n    else\n    {\n        walkAudio.Stop();\n    }\n}"        }
       ],
       "git": "",
       "itch": "https://fvugt.itch.io/ar-museum"
+    },
+    {
+      "id": "hook-line-and-slaughter",
+      "title": "Hook Line and Slaughter",
+      "tagline": "Een strategisch kaartspel waar je vissen vangt en verslaat door het gebruiken van kaarten.",
+      "description": "Hook Line and Slaughter is een strategisch kaartspel waarin het vangen en verslaan van vissen centraal staat.",
+      "thumbnail": "/hook-line-and-slaughter-logo.png",
+      "youtube": "/42e38c6e-654a-4ff6-8233-f5cd07c20175-render.mp4",
+      "screenshots": [],
+      "tags": [
+        "Unity",
+        "C#",
+        "2D",
+        "Card Game"
+      ],
+      "projectRole": "Gameplay Programmer",
+      "timeline": "4 weken",
+      "mechanics": [
+        {
+          "subtitle": "Enemy turn",
+          "description": "Door gebruik te maken van switch cases heb ik een boss gemaakt met 2 phases.",
+          "image": "",
+          "code": "private void TurnFourHandler()\n{\n    originalPlayerHealth = playerHealth.currentHealth;\n    int baseDamage = 5;\n    int finalDamage;\n    finalDamage = DamageCalc(baseDamage);\n    intentText.text = finalDamage.ToString() + \", \" + \"buff, \" + \"Debuff\";\n    if (TurnManager.turnManager.turnCounter > originalTurnCount)\n    {\n        enemyHealth.GainShield(10);\n        playerHealth.TakeDamage(finalDamage);\n        CheckForBleed();\n        StatusManager.statusManager.playerVulnerableStacks += 2;\n        StatusManager.statusManager.enemyStrength += 1;\n        originalTurnCount = TurnManager.turnManager.turnCounter;\n        currentState = TurnCycleState.Turn5;\n    }\n}"        },
+        {
+          "subtitle": "Base enemy",
+          "description": "Alle enemies erfen over van een BaseEnemyBehaviour script.",
+          "image": "",
+"code": "public class BaseEnemyBehavior : MonoBehaviour\n{\n    public enum TurnCycleState\n    {\n        Turn1,\n        Turn2,\n        Turn3,\n        Turn4,\n        Turn5,\n        Turn6,\n    }\n    [SerializeField] protected TextMeshProUGUI intentText;\n    public TurnCycleState currentState = TurnCycleState.Turn1;\n    protected int originalTurnCount;\n    protected HealthBar playerHealth;\n    protected HealthBar enemyHealth;\n\n    virtual public void HandleStageTransition()\n    {\n        switch (currentState)\n        {\n            case TurnCycleState.Turn1:\n                TurnOneHandler();\n                break;\n            case TurnCycleState.Turn2:\n                TurnTwoHandler();\n                break;\n            case TurnCycleState.Turn3:\n                TurnThreeHandler();\n                break;\n        }\n    }\n\n    virtual protected void Awake()\n    {\n        GameObject player = GameObject.FindGameObjectWithTag(\"Player\");\n        playerHealth = player.GetComponent<HealthBar>();\n        enemyHealth = GetComponent<HealthBar>();\n    }\n\n    private void Start()\n    {\n        if (StatusManager.statusManager != null)\n        {\n            StatusManager.statusManager.enemyHealthBar = this.GetComponent<HealthBar>();\n        }\n    }\n\n    virtual protected void Update()\n    {\n        HandleStageTransition();\n    }\n\n    virtual public void TurnOneHandler()\n    {\n        int baseDamage = 10;\n        int finalDamage;\n        finalDamage = DamageCalc(baseDamage);\n        intentText.text = finalDamage.ToString();\n        if (TurnManager.turnManager.turnCounter > originalTurnCount)\n        {\n            playerHealth.TakeDamage(finalDamage);\n            originalTurnCount = TurnManager.turnManager.turnCounter;\n            currentState = TurnCycleState.Turn2;\n        }\n    }\n\n    virtual public void TurnTwoHandler()\n    {\n        int baseDamage = 6;\n        int finalDamage;\n        finalDamage = DamageCalc(baseDamage);\n        intentText.text = finalDamage.ToString() + \", \" + \"Shield\";\n        if (TurnManager.turnManager.turnCounter > originalTurnCount)\n        {\n            playerHealth.TakeDamage(finalDamage);\n            enemyHealth.GainShield(10);\n            originalTurnCount = TurnManager.turnManager.turnCounter;\n            currentState = TurnCycleState.Turn3;\n        }\n    }\n\n    virtual public void TurnThreeHandler()\n    {\n        int baseDamage = 6;\n        int finalDamage;\n        finalDamage = DamageCalc(baseDamage);\n        intentText.text = finalDamage.ToString() + \", \" + \"Debuff\";\n        if (TurnManager.turnManager.turnCounter > originalTurnCount)\n        {\n            playerHealth.TakeDamage(finalDamage);\n            StatusManager.statusManager.playerWeakenStacks++;\n            originalTurnCount = TurnManager.turnManager.turnCounter;\n            currentState = TurnCycleState.Turn1;\n        }\n    }\n\n    protected int DamageCalc(int damage)\n    {\n        damage += StatusManager.statusManager.enemyStrength;\n        if (StatusManager.statusManager.playerVulnerableStacks > 0)\n        {\n            Debug.Log(\"vuln\");\n            damage = Mathf.CeilToInt(damage * 1.5f);\n        }\n        return damage;\n    }\n}"        }
+      ],
+      "git": "",
+      "itch": ""
     }
   ]
 }
