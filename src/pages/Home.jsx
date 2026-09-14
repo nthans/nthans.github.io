@@ -1,229 +1,202 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 import { siteConfig } from "../siteConfig";
-import ProjectCard from "../components/ProjectCard";
 import projectData from "../data/projectdata.json";
 
 export default function Home() {
   const projects = projectData.projects;
-  const [gameActive, setGameActive] = useState(false);
-  const [snake, setSnake] = useState([{ x: 5, y: 5 }]);
-  const [direction, setDirection] = useState({ x: 1, y: 0 });
-  const [food, setFood] = useState({ x: 10, y: 8 });
-  const [score, setScore] = useState(0);
-  const [gameOver, setGameOver] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
 
-  const gridSize = 15;
-  const cellSize = 100 / gridSize;
+  const prev = () => setActiveIndex((i) => (i - 1 + projects.length) % projects.length);
+  const next = () => setActiveIndex((i) => (i + 1) % projects.length);
 
-  // Game loop
-  useEffect(() => {
-    if (!gameActive || gameOver) return;
-
-    const moveSnake = () => {
-      setSnake(prev => {
-        const newHead = {
-          x: (prev[0].x + direction.x + gridSize) % gridSize,
-          y: (prev[0].y + direction.y + gridSize) % gridSize
-        };
-
-        // Check collision with self
-        const hitSelf = prev.some(segment => segment.x === newHead.x && segment.y === newHead.y);
-        if (hitSelf) {
-          setGameOver(true);
-          setGameActive(false);
-          return prev;
-        }
-
-        // Check if ate food
-        if (newHead.x === food.x && newHead.y === food.y) {
-          setScore(s => s + 1);
-          setFood({
-            x: Math.floor(Math.random() * gridSize),
-            y: Math.floor(Math.random() * gridSize)
-          });
-          return [newHead, ...prev];
-        }
-
-        // Normal move
-        return [newHead, ...prev.slice(0, -1)];
-      });
-    };
-
-    const interval = setInterval(moveSnake, 150);
-    return () => clearInterval(interval);
-  }, [gameActive, direction, food, gameOver]);
-
-  // WASD controls
-  useEffect(() => {
-    const handleKey = (e) => {
-      if (!gameActive || gameOver) return;
-      
-      const key = e.key.toLowerCase();
-      if (key === 'w' && direction.y === 0) setDirection({ x: 0, y: -1 });
-      if (key === 's' && direction.y === 0) setDirection({ x: 0, y: 1 });
-      if (key === 'a' && direction.x === 0) setDirection({ x: -1, y: 0 });
-      if (key === 'd' && direction.x === 0) setDirection({ x: 1, y: 0 });
-    };
-
-    window.addEventListener('keydown', handleKey);
-    return () => window.removeEventListener('keydown', handleKey);
-  }, [gameActive, direction, gameOver]);
-
-  const startGame = () => {
-    setGameActive(true);
-    setGameOver(false);
-    setSnake([{ x: 5, y: 5 }]);
-    setDirection({ x: 1, y: 0 });
-    setScore(0);
-    setFood({ x: 10, y: 8 });
-  };
-
-  const stopGame = () => {
-    setGameActive(false);
-    setGameOver(false);
+  // Returns the relative position from active: -2, -1, 0, 1, 2
+  const getOffset = (index) => {
+    let offset = index - activeIndex;
+    if (offset > projects.length / 2) offset -= projects.length;
+    if (offset < -projects.length / 2) offset += projects.length;
+    return offset;
   };
 
   return (
     <div className="relative min-h-screen overflow-hidden">
 
-      {/* ================= BACKGROUND SYSTEM ================= */}
+      {/* ================= BACKGROUND ================= */}
       <div className="fixed inset-0 -z-10">
         <div className="absolute inset-0 bg-black" />
-        <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(circle_at_1px_1px,#fff_1px,transparent_0)] bg-size-24px_24px]" />
-        <div className="absolute top-1/2 left-1/2 w-900 h-900 bg-(--accent) opacity-10 blur-[300px] -translate-x-1/2 -translate-y-1/2" />
+        <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(circle_at_1px_1px,#fff_1px,transparent_0)]" style={{ backgroundSize: "24px 24px" }} />
+        <div className="absolute top-1/2 left-1/2 w-[900px] h-[900px] bg-(--accent) opacity-10 blur-[300px] -translate-x-1/2 -translate-y-1/2" />
       </div>
 
-      {/* ================= TOP INTERACTIVE GAME ================= */}
-      <section className="relative pt-24 pb-40 px-6">
-        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[1fr_420px] gap-16 items-center">
-
-          {/* LEFT — SNAKE GAME */}
-          <div className="relative border border-(--accent)/30 rounded-2xl p-10 backdrop-blur-xl bg-black/40">
-
-            <div className="flex justify-between items-center mb-6">
-              <div>
-                <h3 className="text-lg font-light text-(--text)">
-                  {gameOver ? "Game Over!" : gameActive ? "Catch the dots!" : "Mini Snake"}
-                </h3>
-                <p className="text-sm text-(--muted) mt-1">
-                  {gameOver ? `Final score: ${score}` : gameActive ? "Use WASD keys" : "Click to play"}
-                </p>
-              </div>
-              <div className="text-right">
-                <div className="text-2xl font-light text-(--accent)">{score}</div>
-                <div className="text-xs text-(--muted)">score</div>
-              </div>
-            </div>
-
-            {/* Game board */}
-            <div className="relative aspect-square mb-6 border border-(--accent)/20 rounded-lg overflow-hidden bg-black/30">
-              {/* Food */}
-              <div
-                className="absolute w-[6%] h-[6%] rounded-full bg-(--accent) shadow-[0_0_20px_rgba(139,0,0,0.9)] transition-all duration-100"
-                style={{
-                  left: `${food.x * cellSize}%`,
-                  top: `${food.y * cellSize}%`,
-                }}
-              />
-
-              {/* Snake */}
-              {snake.map((segment, i) => (
-                <div
-                  key={i}
-                  className={`absolute w-[6%] h-[6%] rounded-sm transition-all duration-100
-                    ${i === 0 ? "bg-(--accent) scale-110" : "bg-(--accent)/60"}
-                  `}
-                  style={{
-                    left: `${segment.x * cellSize}%`,
-                    top: `${segment.y * cellSize}%`,
-                    opacity: 1 - (i / snake.length) * 0.3,
-                  }}
-                />
-              ))}
-
-              {/* Grid overlay */}
-              <div className="absolute inset-0 opacity-5">
-                <div className="w-full h-full grid grid-cols-15 gap-px bg-(--accent)/20" />
-              </div>
-            </div>
-
-            {/* Controls */}
-            <div className="flex gap-3">
-              {!gameActive ? (
-                <button
-                  onClick={startGame}
-                  className="flex-1 px-5 py-3 text-sm
-                           border border-(--accent)/40 rounded-lg
-                           hover:bg-(--accent)/20 transition text-(--text)"
-                >
-                  {gameOver ? "Play Again" : "Start Game"}
-                </button>
-              ) : (
-                <button
-                  onClick={stopGame}
-                  className="flex-1 px-5 py-3 text-sm
-                           border border-(--accent)/40 rounded-lg
-                           hover:bg-(--accent)/20 transition text-(--text)"
-                >
-                  Reset
-                </button>
-              )}
-            </div>
+      {/* ================= HERO SECTION ================= */}
+      <section className="relative pt-32 pb-20 px-6">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          
+          {/* LEFT — TEXT */}
+          <div className="flex flex-col gap-6 z-10">
+            <p className="text-(--muted) tracking-widest text-sm uppercase">Welcome</p>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
+              {siteConfig.name} <br/>
+              <span className="text-(--accent)">{siteConfig.role}</span>
+            </h1>
+            <p className="text-(--muted) max-w-lg mt-2 text-lg">
+              {siteConfig.tagline}
+            </p>
           </div>
 
           {/* RIGHT — PROFILE */}
-<div className="relative">
-  <div className="absolute inset-0 bg-(--accent) opacity-20 blur-3xl rounded-full" />
-
-  <div className="relative aspect-square border border-(--accent)/40 rounded-full overflow-hidden backdrop-blur-xl bg-black/50 grid place-items-center">
-
-    {/* Profile image */}
-    <div className="relative w-100 h-100">
-      <img 
-        src="https://cdn.discordapp.com/attachments/1158864724788793407/1463839413439303814/Screenshot_20260122_111428_Photos.jpg?ex=69734a30&is=6971f8b0&hm=d5417a24df6bc4c2341cf9c3a7cd2204bccc9575dbc68f172ccb821d1661ad0f&" 
-        alt="Profile"
-        className="w-full h-full rounded-full object-cover border-2 border-(--accent)/40 shadow-[0_0_40px_rgba(139,0,0,0.3)]"
-      />
-      <div className="absolute inset-0 rounded-full bg-(--accent)/10 blur-xl -z-10" />
-    </div>
-
-    {/* Simple labels */}
-    <div className="absolute top-4 left-4 text-xs text-(--accent)">
-      IDENTITY CORE
-    </div>
-    <div className="absolute bottom-4 right-4 text-xs text-(--accent)">
-      ONLINE
-    </div>
-  </div>
-</div>
-
+          <div className="relative flex justify-center items-center lg:justify-end">
+            <div className="absolute inset-0 bg-(--accent)/30 blur-[100px] rounded-full" />
+            <div className="relative w-72 h-72 sm:w-[400px] sm:h-[400px] md:w-[450px] md:h-[450px] rounded-full overflow-hidden border-2 border-(--bordercolor) z-10 bg-(--surface)">
+              <img 
+                src="/profile-chair.jpg" 
+                alt="Profile"
+                className="w-full h-full object-cover filter grayscale hover:grayscale-0 transition-all duration-500 rounded-full"
+                style={{ objectPosition: "center top" }}
+              />
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* ================= PROJECT STREAM ================= */}
-      <main className="relative px-6 pb-32 max-w-6xl mx-auto">
-
-        {/* Timeline */}
-        <div className="absolute left-6 top-0 bottom-0 w-px bg-(--accent)/20" />
-
-        <div className="space-y-32">
-          {projects.map((project, index) => (
-            <div key={project.id} className="relative pl-20">
-
-              <div className="absolute left-3 top-8 w-4 h-4 rounded-full bg-(--accent) shadow-[0_0_20px_rgba(139,0,0,0.8)]" />
-
-              <div className={`${index % 2 ? "ml-12" : ""} max-w-3xl`}>
-                <ProjectCard project={project} />
-              </div>
-            </div>
-          ))}
+      {/* ================= PROJECT CAROUSEL ================= */}
+      <section className="relative py-24 px-6 overflow-hidden">
+        
+        {/* Section heading */}
+        <div className="text-center mb-16">
+          <p className="text-(--muted) tracking-widest text-sm uppercase mb-2">Mijn werk</p>
+          <h2 className="text-3xl md:text-4xl font-bold">Projects</h2>
         </div>
-      </main>
 
-      {/* ================= HUD STATUS ================= */}
-      <div className="fixed bottom-6 right-6 border border-(--accent)/30 rounded-xl px-5 py-3 backdrop-blur-xl bg-black/50 text-xs text-(--muted)">
-        <span className="text-(--accent)">◉</span> NEURAL LINK ACTIVE
-      </div>
+        {/* Carousel track */}
+        <div className="relative h-[460px] flex items-center justify-center">
+
+          {projects.map((project, index) => {
+            const offset = getOffset(index);
+            const isActive = offset === 0;
+            const isVisible = Math.abs(offset) <= 2;
+
+            if (!isVisible) return null;
+
+            // Calculate transform values
+            const translateX = offset * 340;
+            const scale = isActive ? 1 : Math.abs(offset) === 1 ? 0.78 : 0.58;
+            const opacity = isActive ? 1 : Math.abs(offset) === 1 ? 0.65 : 0.35;
+            const zIndex = isActive ? 30 : Math.abs(offset) === 1 ? 20 : 10;
+            const blur = isActive ? 0 : Math.abs(offset) === 1 ? 0 : 2;
+
+            return (
+              <div
+                key={project.id}
+                onClick={() => !isActive && setActiveIndex(index)}
+                style={{
+                  position: "absolute",
+                  transform: `translateX(${translateX}px) scale(${scale})`,
+                  opacity,
+                  zIndex,
+                  filter: blur > 0 ? `blur(${blur}px)` : "none",
+                  transition: "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
+                  cursor: isActive ? "default" : "pointer",
+                  width: "340px",
+                }}
+              >
+                <Link
+                  to={isActive ? `/projects/${project.id}` : "#"}
+                  onClick={(e) => { if (!isActive) e.preventDefault(); }}
+                  className={`group block bg-(--surface) rounded-2xl overflow-hidden border transition-all duration-300 shadow-2xl
+                    ${isActive
+                      ? "border-(--accent)/60 shadow-(--accent)/20"
+                      : "border-(--bordercolor) pointer-events-none"
+                    }`}
+                >
+                  {/* Thumbnail */}
+                  <div className="relative overflow-hidden" style={{ aspectRatio: "16/9" }}>
+                    <img
+                      src={project.thumbnail}
+                      alt={project.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    {isActive && (
+                      <div className="absolute inset-0 bg-(--overlay) opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <span className="text-(--text) font-semibold">Bekijk Project →</span>
+                      </div>
+                    )}
+                    {/* Orange glow bar at bottom for active */}
+                    {isActive && (
+                      <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-(--accent) to-transparent" />
+                    )}
+                  </div>
+
+                  {/* Content */}
+                  <div className="p-5">
+                    <h3 className={`text-lg font-semibold mb-1 transition-colors ${isActive ? "text-(--accent)" : "text-(--text)"}`}>
+                      {project.title}
+                    </h3>
+                    <p className="text-sm text-(--muted) line-clamp-2">{project.tagline}</p>
+                    <div className="flex flex-wrap gap-2 mt-3">
+                      {project.tags.slice(0, 3).map((tag) => (
+                        <span key={tag} className="tag">{tag}</span>
+                      ))}
+                    </div>
+                  </div>
+                </Link>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Navigation arrows + dots */}
+        <div className="flex items-center justify-center gap-6 mt-8">
+          
+          {/* Left arrow */}
+          <button
+            onClick={prev}
+            aria-label="Previous project"
+            className="group w-12 h-12 rounded-full border border-(--bordercolor) flex items-center justify-center text-(--muted) hover:border-(--accent) hover:text-(--accent) hover:bg-(--accent)/10 transition-all duration-200"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 transition-transform group-hover:-translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+
+          {/* Dot indicators */}
+          <div className="flex gap-2 items-center">
+            {projects.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setActiveIndex(i)}
+                aria-label={`Go to project ${i + 1}`}
+                className="transition-all duration-300"
+                style={{
+                  width: i === activeIndex ? "24px" : "8px",
+                  height: "8px",
+                  borderRadius: "4px",
+                  background: i === activeIndex ? "var(--accent)" : "rgba(255,255,255,0.2)",
+                }}
+              />
+            ))}
+          </div>
+
+          {/* Right arrow */}
+          <button
+            onClick={next}
+            aria-label="Next project"
+            className="group w-12 h-12 rounded-full border border-(--bordercolor) flex items-center justify-center text-(--muted) hover:border-(--accent) hover:text-(--accent) hover:bg-(--accent)/10 transition-all duration-200"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 transition-transform group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
+
+        {/* Project counter */}
+        <p className="text-center text-(--muted) text-sm mt-4">
+          <span className="text-(--accent) font-semibold">{activeIndex + 1}</span>
+          <span className="mx-1">/</span>
+          {projects.length}
+        </p>
+      </section>
+
     </div>
   );
 }

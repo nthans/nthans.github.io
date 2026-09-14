@@ -5,8 +5,8 @@
       "title": "Chairborne",
       "tagline": "Een virtual reality kartracing game.",
       "description": "Chairborne is een kartracing game waarin je met een VR bril en een racestuur een ziekenhuis induikt en met rolstoellen door de gangen heen racet.",
-      "thumbnail": "https://cdn.discordapp.com/attachments/1437488868214571220/1463828330985033914/logo.png?ex=69733fde&is=6971ee5e&hm=fc8ce2151ea9e08a028f1e53f3493106f0e34470f2d8bac2a3286d80c6690103&",
-      "youtube": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+      "thumbnail": "/chairborne-logo.png",
+      "youtube": "/chairborne-video.mp4",
       "screenshots": [
         "https://picsum.photos/seed/a1/1200/800",
         "https://picsum.photos/seed/a2/1200/800"
@@ -23,13 +23,13 @@
         {
           "subtitle": "Movement System",
           "description": "de speler gebruikt de controls op de race stuur om rond te bewegen. de speler beweegt door force te geven aan een rigidbody om snel door het level heen te racen.",
-          "image": "https://picsum.photos/seed/e1/1200/800",
+          "image": "",
           "code": "void Update()\n{\n    if (Input.GetKey(KeyCode.W))\n        rb.AddForce(transform.up * thrust);\n\n    float rotate = Input.GetAxis(\"Horizontal\");\n    rb.MoveRotation(rb.rotation - rotate * rotateSpeed * Time.deltaTime);\n}"
         },
         {
           "subtitle": "AI",
           "description": "er ligt een navmesh over de racebaan en er zijn een aantal punten rond de baan vastgelegd die de AI volgt om goed over de baan te kunnen rijden.",
-          "image": "https://picsum.photos/seed/e2/1200/800",
+          "image": "",
           "code": "void SpawnAsteroid()\n{\n    Vector3 pos = Random.onUnitSphere * spawnRadius;\n    float size = Random.Range(0.5f, 2.5f);\n\n    GameObject ast = Instantiate(asteroidPrefab, pos, Random.rotation);\n    ast.transform.localScale = Vector3.one * size;\n\n    Rigidbody rb = ast.GetComponent<Rigidbody>();\n    rb.AddForce(Random.onUnitSphere * Random.Range(5,15), ForceMode.Impulse);\n}"
         }
       ]
@@ -100,11 +100,11 @@
       ]
     },
     {
-      "id": "vr-training-sim",
-      "title": "VR Training Simulator",
+      "id": "symphony-of-skin",
+      "title": "Symphony of skin",
       "tagline": "Een realistische VR-training voor industriële procedures.",
       "description": "Deze VR training simulator is gebouwd voor het oefenen van complexe industriële procedures in een volledig veilige virtuele omgeving. Het doel was om een training te creëren die net zo effectief is als hands-on training, maar zonder de risico's en kosten.\n\nDe focus lag op realistische hand-tracking voor natuurlijke interacties, stapsgewijze instructies die gebruikers begeleiden en gedetailleerde feedback op gebruikersacties waarbij immediate feedback het leerproces versterkt.\n\nHet project leerde mij hoe je effectieve VR training ervaringen ontwerpt met verschillende difficulty modes en performance tracking om daadwerkelijk kennisoverdracht te bevorderen.",
-      "thumbnail": "https://picsum.photos/seed/vrtrain/1200/600",
+      "thumbnail": "/symphony-of-skin-thumbnail.jpg",
       "youtube": "https://www.youtube.com/embed/dQw4w9WgXcQ",
       "screenshots": [
         "https://picsum.photos/seed/vrt1/1200/800",
@@ -123,13 +123,13 @@
         {
           "subtitle": "Step-by-Step Guide System",
           "description": "Een dynamisch instructiesysteem dat de gebruiker door complexe multi-step procedures leidt met real-time visual guidance. Elke step heeft validation criteria die checken of de actie correct is uitgevoerd. In guided mode krijg je hints als je te lang stilstaat, terwijl advanced mode minimale assists heeft voor realistischere training.",
-          "image": "https://placehold.co/600x400?text=Guide+System",
+          "image": "",
           "code": "public class StepGuide : MonoBehaviour\n{\n    public List<TrainingStep> steps;\n    private int currentStep = 0;\n\n    void CheckStepCompletion()\n    {\n        if (steps[currentStep].IsCompleted())\n        {\n            currentStep++;\n            ShowNextInstruction();\n        }\n    }\n}"
         },
         {
           "subtitle": "Hand Tracking Validation",
           "description": "Controleert of handposities en hand poses correct zijn voor specifieke acties door palm orientation en finger positions te valideren. Wanneer je grip incorrect is, verschijnt een ghost hand overlay die de correcte positie toont. Dit is veel effectiever dan tekstuele instructies omdat mensen de juiste pose kunnen imiteren.",
-          "image": "https://placehold.co/600x400?text=Hand+Tracking",
+          "image": "",
           "code": "bool ValidateHandPose(HandPose required)\n{\n    float similarity = Vector3.Dot(\n        currentPose.palmNormal,\n        required.palmNormal\n    );\n\n    return similarity > 0.95f;\n}"
         }
       ],
@@ -137,13 +137,14 @@
       "itch": ""
     },
     {
-      "id": "ar-museum-guide",
-      "title": "AR Museum Guide",
-      "tagline": "Een interactieve AR-applicatie voor museum bezoekers.",
-      "description": "De AR Museum Guide brengt museumtentoonstellingen tot leven door digitale content over fysieke objecten heen te projecteren en transformeert statische kunstwerken in interactieve verhalen. Een Romeins schilderij komt tot leven met animated characters, bij fossielen verschijnen 3D reconstructies.\n\nGebruikers kunnen hun telefoon op kunstwerken richten om extra informatie, 3D modellen en interactieve elementen te zien die historical context bieden op een engaging manier.\n\nDit project introduceerde mij in AR Foundation, image tracking en UI design voor augmented reality waarbij ik leerde werken met verschillende lighting conditions in musea.",
-      "thumbnail": "https://picsum.photos/seed/armuseum/1200/600",
-      "youtube": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+      "id": "masks-eye",
+      "title": "Mask's eye",
+      "tagline": "Een mysterieus puzzeldetectivespel waarin je magische maskers gebruikt om mysteries te ontrafelen.",
+      "description": "Mask's eye is een mysterieus puzzelspel waarin je verschillende magische maskers opzet om de wereld vanuit unieke perspectieven te bekijken. Gebruik de speciale krachten van elk masker om verborgen aanwijzingen te ontdekken, puzzels op te lossen en het mysterie te ontrafelen.",
+      "thumbnail": "/masks-eye.png",
+      "youtube": "",
       "screenshots": [
+        "/masks-eye-hallway.png",
         "https://picsum.photos/seed/arm1/1200/800",
         "https://picsum.photos/seed/arm2/1200/800"
       ],
@@ -157,20 +158,50 @@
       "timeline": "3 weken",
       "mechanics": [
         {
-          "subtitle": "Image Tracking System",
-          "description": "Herkent kunstwerken en plaatst AR content op de juiste posities door gebruik te maken van AR Foundation's image tracking. Wanneer een artwork gedetecteerd wordt, spawned het systeem de bijbehorende content - info panels, 3D modellen of video overlays. De content blijft stabiel geanchored zelfs als de camera beweegt.",
-          "image": "https://placehold.co/600x400?text=Image+Tracking",
-          "code": "void OnTrackedImagesChanged(ARTrackedImagesChangedEventArgs args)\n{\n    foreach (var trackedImage in args.added)\n    {\n        string artworkId = trackedImage.referenceImage.name;\n        SpawnARContent(artworkId, trackedImage.transform);\n    }\n}"
+          "subtitle": "Generate text",
+          "description": "Een systeem dat dynamisch tekstballonnen of tekstvakken genereert wanneer dat nodig is. De tekst wordt letter voor letter van links naar rechts getypt, wat zorgt voor een rustig en uiterst bevredigend visueel effect.",
+          "image": "",
+          "code": "IEnumerator Letters()\n{\n    dialogText.text = \"\";\n\n    if (queue.Count != 0)\n    { \n        string sentence = queue.Dequeue();\n\n        foreach (char letter in sentence)\n        { \n            dialogText.text += letter;\n            yield return new WaitForSeconds(letterDelay);\n        }\n    }\n}"
         },
         {
-          "subtitle": "Interactive 3D Models",
-          "description": "Gebruikers kunnen 3D modellen roteren en schalen met intuïtive touch gestures - single finger drag roteert, pinch zoom schaalt en two-finger drag verplaatst het model. Sommige modellen zijn animated en kunnen hun functie demonstreren. Custom shaders zorgen dat de modellen natuurlijk blenden met de real world door environment lighting.",
-          "image": "https://placehold.co/600x400?text=3D+Interaction",
-          "code": "void HandleTouchInput()\n{\n    if (Input.touchCount == 2)\n    {\n        Touch t1 = Input.GetTouch(0);\n        Touch t2 = Input.GetTouch(1);\n\n        float pinchDist = Vector2.Distance(t1.position, t2.position);\n        float scale = pinchDist / initialPinchDist;\n\n        model.localScale = initialScale * scale;\n    }\n}"
-        }
+          "subtitle": "Player movement",
+          "description": "Een soepel en responsief bewegingssysteem voor de speler dat perfect aansluit bij de sfeer van een escape room. Door nauwkeurige besturing en vloeiende versnelling voelt het verkennen van de kamers intuïtief en meeslepend aan.",
+          "image": "",
+          "code": "private void Update()\n{\n    if (!MaskPickup.MinigamingIt)\n    {\n        Vector3 move = transform.right * Input.GetAxis(\"Horizontal\") + transform.forward * Input.GetAxis(\"Vertical\");\n        cc.Move(move * speed * Time.deltaTime);\n        if (cc.isGrounded && velocity.y < 0)\n        {\n            velocity.y = -2;\n        }\n        velocity.y += gravity * Time.deltaTime;\n        cc.Move(velocity * Time.deltaTime);\n    }\n\n    if ((Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D)) && !MaskPickup.MinigamingIt)\n    {\n        walking = true;\n    }\n    else\n    {\n        walking = false;\n    }\n\n    if (walking)\n    {\n        if (!walkAudio.isPlaying)\n        {\n            walkAudio.Play();\n            walkAudio.pitch = Random.Range(.75f, 1f);\n        }\n    }\n    else\n    {\n        walkAudio.Stop();\n    }\n}"        }
       ],
       "git": "",
       "itch": "https://fvugt.itch.io/ar-museum"
+    },
+    {
+      "id": "hook-line-and-slaughter",
+      "title": "Hook Line and Slaughter",
+      "tagline": "Een strategisch kaartspel waar je vissen vangt en verslaat door het gebruiken van kaarten.",
+      "description": "Hook Line and Slaughter is een strategisch kaartspel waarin het vangen en verslaan van vissen centraal staat.",
+      "thumbnail": "/hook-line-and-slaughter-logo.png",
+      "youtube": "/42e38c6e-654a-4ff6-8233-f5cd07c20175-render.mp4",
+      "screenshots": [],
+      "tags": [
+        "Unity",
+        "C#",
+        "2D",
+        "Card Game"
+      ],
+      "projectRole": "Gameplay Programmer",
+      "timeline": "4 weken",
+      "mechanics": [
+        {
+          "subtitle": "Enemy turn",
+          "description": "Door gebruik te maken van switch cases heb ik een boss gemaakt met 2 phases.",
+          "image": "",
+          "code": "private void TurnFourHandler()\n{\n    originalPlayerHealth = playerHealth.currentHealth;\n    int baseDamage = 5;\n    int finalDamage;\n    finalDamage = DamageCalc(baseDamage);\n    intentText.text = finalDamage.ToString() + \", \" + \"buff, \" + \"Debuff\";\n    if (TurnManager.turnManager.turnCounter > originalTurnCount)\n    {\n        enemyHealth.GainShield(10);\n        playerHealth.TakeDamage(finalDamage);\n        CheckForBleed();\n        StatusManager.statusManager.playerVulnerableStacks += 2;\n        StatusManager.statusManager.enemyStrength += 1;\n        originalTurnCount = TurnManager.turnManager.turnCounter;\n        currentState = TurnCycleState.Turn5;\n    }\n}"        },
+        {
+          "subtitle": "Base enemy",
+          "description": "Alle enemies erfen over van een BaseEnemyBehaviour script.",
+          "image": "",
+"code": "public class BaseEnemyBehavior : MonoBehaviour\n{\n    public enum TurnCycleState\n    {\n        Turn1,\n        Turn2,\n        Turn3,\n        Turn4,\n        Turn5,\n        Turn6,\n    }\n    [SerializeField] protected TextMeshProUGUI intentText;\n    public TurnCycleState currentState = TurnCycleState.Turn1;\n    protected int originalTurnCount;\n    protected HealthBar playerHealth;\n    protected HealthBar enemyHealth;\n\n    virtual public void HandleStageTransition()\n    {\n        switch (currentState)\n        {\n            case TurnCycleState.Turn1:\n                TurnOneHandler();\n                break;\n            case TurnCycleState.Turn2:\n                TurnTwoHandler();\n                break;\n            case TurnCycleState.Turn3:\n                TurnThreeHandler();\n                break;\n        }\n    }\n\n    virtual protected void Awake()\n    {\n        GameObject player = GameObject.FindGameObjectWithTag(\"Player\");\n        playerHealth = player.GetComponent<HealthBar>();\n        enemyHealth = GetComponent<HealthBar>();\n    }\n\n    private void Start()\n    {\n        if (StatusManager.statusManager != null)\n        {\n            StatusManager.statusManager.enemyHealthBar = this.GetComponent<HealthBar>();\n        }\n    }\n\n    virtual protected void Update()\n    {\n        HandleStageTransition();\n    }\n\n    virtual public void TurnOneHandler()\n    {\n        int baseDamage = 10;\n        int finalDamage;\n        finalDamage = DamageCalc(baseDamage);\n        intentText.text = finalDamage.ToString();\n        if (TurnManager.turnManager.turnCounter > originalTurnCount)\n        {\n            playerHealth.TakeDamage(finalDamage);\n            originalTurnCount = TurnManager.turnManager.turnCounter;\n            currentState = TurnCycleState.Turn2;\n        }\n    }\n\n    virtual public void TurnTwoHandler()\n    {\n        int baseDamage = 6;\n        int finalDamage;\n        finalDamage = DamageCalc(baseDamage);\n        intentText.text = finalDamage.ToString() + \", \" + \"Shield\";\n        if (TurnManager.turnManager.turnCounter > originalTurnCount)\n        {\n            playerHealth.TakeDamage(finalDamage);\n            enemyHealth.GainShield(10);\n            originalTurnCount = TurnManager.turnManager.turnCounter;\n            currentState = TurnCycleState.Turn3;\n        }\n    }\n\n    virtual public void TurnThreeHandler()\n    {\n        int baseDamage = 6;\n        int finalDamage;\n        finalDamage = DamageCalc(baseDamage);\n        intentText.text = finalDamage.ToString() + \", \" + \"Debuff\";\n        if (TurnManager.turnManager.turnCounter > originalTurnCount)\n        {\n            playerHealth.TakeDamage(finalDamage);\n            StatusManager.statusManager.playerWeakenStacks++;\n            originalTurnCount = TurnManager.turnManager.turnCounter;\n            currentState = TurnCycleState.Turn1;\n        }\n    }\n\n    protected int DamageCalc(int damage)\n    {\n        damage += StatusManager.statusManager.enemyStrength;\n        if (StatusManager.statusManager.playerVulnerableStacks > 0)\n        {\n            Debug.Log(\"vuln\");\n            damage = Mathf.CeilToInt(damage * 1.5f);\n        }\n        return damage;\n    }\n}"        }
+      ],
+      "git": "",
+      "itch": ""
     }
   ]
 }
